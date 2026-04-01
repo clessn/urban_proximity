@@ -1,0 +1,23 @@
+Revised model summary
+Riding means rows available: 348
+
+mA: N=16334 | R2=0.0803
+  log_dist_nearest_km: coef=0.412788 se=0.250369 p=0.0992238
+  nearest_reserve_cwb: coef=NA se=NA p=NA
+  interaction: coef=NA se=NA p=NA
+
+mB: N=16334 | R2=0.0805
+  log_dist_nearest_km: coef=-2.439289 se=2.059133 p=0.236185
+  nearest_reserve_cwb: coef=-0.162946 se=0.104981 p=0.120646
+  interaction: coef=0.038435 se=0.027936 p=0.168897
+
+mC: N=338 | R2=0.2185
+  log_dist_nearest_km: coef=1.671888 se=2.446636 p=0.494874
+  nearest_reserve_cwb: coef=0.066721 se=0.131885 p=0.613262
+  interaction: coef=-0.017272 se=0.033805 p=0.609738
+
+mD: N=337 | R2=0.4967
+  log_dist_nearest_km: coef=0.300676 se=0.135285 p=0.0269304
+  nearest_reserve_cwb: coef=0.014041 se=0.007294 p=0.0551022
+  interaction: coef=-0.003190 se=0.001869 p=0.0888178
+

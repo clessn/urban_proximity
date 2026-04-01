@@ -68,6 +68,7 @@ cat("  CWB score distribution for reserves:\n")
 print(summary(reserves$cwb_score))
 
 
+
 # =============================================================================
 # 3. Classify reserves: urban vs. rural/remote
 # =============================================================================
@@ -127,6 +128,17 @@ print(table(reserves$urban_class))
 
 
 # =============================================================================
+# 3b. Restrict exposure measures to inhabited reserves
+# =============================================================================
+# Use a population threshold so proximity captures exposure to actual communities
+# rather than uninhabited land parcels that still carry reserve boundaries.
+reserves_inhabited <- reserves %>%
+  filter(!is.na(pop_2021), pop_2021 >= 100)
+
+cat("  Inhabited reserves (pop_2021 >= 100):", nrow(reserves_inhabited), "\n")
+
+
+# =============================================================================
 # 4. Compute reserve centroids in projected CRS (NAD83 / Canada Albers Equal Area)
 # =============================================================================
 cat("\nComputing reserve centroids...\n")
@@ -138,7 +150,15 @@ reserves_albers <- reserves %>%
   mutate(geometry = centroid) %>%
   st_as_sf(crs = 3347)
 
+reserves_inhabited_albers <- reserves_inhabited %>%
+  st_transform(3347) %>%
+  mutate(centroid = st_centroid(geometry)) %>%
+  st_drop_geometry() %>%
+  mutate(geometry = centroid) %>%
+  st_as_sf(crs = 3347)
+
 cat("  Reserve centroids computed:", nrow(reserves_albers), "\n")
+cat("  Inhabited reserve centroids computed:", nrow(reserves_inhabited_albers), "\n")
 
 
 # =============================================================================
@@ -162,8 +182,9 @@ fed_albers <- fed %>%
 # =============================================================================
 cat("\nComputing proximity measures...\n")
 
-# All reserves — nearest distance (overall)
-dist_matrix <- st_distance(fed_albers, reserves_albers)  # n_fed x n_reserve matrix
+# Use inhabited reserves for exposure/nearest-reserve measures so distance reflects
+# nearby communities rather than uninhabited reserve parcels.
+dist_matrix <- st_distance(fed_albers, reserves_inhabited_albers)  # n_fed x n_reserve matrix
 cat("  Distance matrix dimensions:", dim(dist_matrix), "\n")
 
 # For each FED: distance to nearest reserve (any)
@@ -175,11 +196,11 @@ fed_prox <- fed_albers %>%
       apply(dist_matrix, 1, min) / 1000  # metres → km
     ),
     nearest_reserve_idx = apply(dist_matrix, 1, which.min),
-    nearest_reserve_uid = reserves_albers$CSDUID[nearest_reserve_idx],
-    nearest_reserve_name = reserves_albers$CSDNAME[nearest_reserve_idx],
-    nearest_reserve_cwb = reserves_albers$cwb_score[nearest_reserve_idx],
-    nearest_reserve_urban = reserves_albers$urban_class[nearest_reserve_idx],
-    nearest_reserve_pop = reserves_albers$pop_2021[nearest_reserve_idx]
+    nearest_reserve_uid = reserves_inhabited_albers$CSDUID[nearest_reserve_idx],
+    nearest_reserve_name = reserves_inhabited_albers$CSDNAME[nearest_reserve_idx],
+    nearest_reserve_cwb = reserves_inhabited_albers$cwb_score[nearest_reserve_idx],
+    nearest_reserve_urban = reserves_inhabited_albers$urban_class[nearest_reserve_idx],
+    nearest_reserve_pop = reserves_inhabited_albers$pop_2021[nearest_reserve_idx]
   )
 
 cat("  Distance to nearest reserve (km):\n")
@@ -191,12 +212,12 @@ print(summary(fed_prox$dist_nearest_reserve_km))
 # =============================================================================
 cat("\nComputing distances by CWB quartile...\n")
 
-# CWB quartiles (among reserves with scores)
-cwb_breaks <- quantile(reserves_albers$cwb_score, probs = c(0, 0.25, 0.5, 0.75, 1),
+# CWB quartiles (among inhabited reserves with scores)
+cwb_breaks <- quantile(reserves_inhabited_albers$cwb_score, probs = c(0, 0.25, 0.5, 0.75, 1),
                        na.rm = TRUE)
 cat("  CWB quartile breaks:", cwb_breaks, "\n")
 
-reserves_albers <- reserves_albers %>%
+reserves_inhabited_albers <- reserves_inhabited_albers %>%
   mutate(
     cwb_quartile = cut(cwb_score,
                        breaks = cwb_breaks,
@@ -206,7 +227,7 @@ reserves_albers <- reserves_albers %>%
 
 # Distance to nearest reserve in each CWB quartile
 for (q in c("Q1_lowest", "Q2", "Q3", "Q4_highest")) {
-  res_q <- reserves_albers %>% filter(cwb_quartile == q)
+  res_q <- reserves_inhabited_albers %>% filter(cwb_quartile == q)
   if (nrow(res_q) == 0) {
     fed_prox[[paste0("dist_nearest_cwb_", q, "_km")]] <- NA
     next
@@ -219,7 +240,7 @@ for (q in c("Q1_lowest", "Q2", "Q3", "Q4_highest")) {
 
 # Distance to nearest urban/semi-urban reserve
 for (uclass in c("urban_cma", "semi_urban_ca", "rural_remote")) {
-  res_u <- reserves_albers %>% filter(urban_class == uclass)
+  res_u <- reserves_inhabited_albers %>% filter(urban_class == uclass)
   if (nrow(res_u) == 0) {
     fed_prox[[paste0("dist_nearest_", uclass, "_km")]] <- NA
     next
