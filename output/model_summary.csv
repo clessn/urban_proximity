@@ -1,0 +1,6 @@
+Model,DV,N,R2
+M1: Baseline,Thermometer,16334,0.08
+M2: + CWB,Thermometer,8647,0.0911
+M3: Distance×CWB,Thermometer,8647,0.0911
+M4: Urban/Rural split,Thermometer,16334,0.0801
+M5: Resentment (robust),Resentment Index,6201,0.2455
