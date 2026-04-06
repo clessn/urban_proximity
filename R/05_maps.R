@@ -68,7 +68,7 @@ cat("Bbox:", paste(round(st_bbox(fed)), collapse = ", "), "\n")
 # 2. BUILD RIDING-LEVEL DV DATA
 # =============================================================================
 
-prox <- read.csv("data-clean/proximity_fed_enhanced.csv") %>%
+prox <- read.csv("data-clean/proximity_fed_v2.csv") %>%
   rename(feduid = FEDUID) %>%
   mutate(feduid = as.numeric(feduid))
 
@@ -111,14 +111,14 @@ cat("Range perception:", round(range(riding_dv$mean_perception, na.rm=TRUE), 3),
 fed_dv <- fed %>%
   left_join(riding_dv, by = "feduid") %>%
   left_join(
-    prox %>% select(feduid, dist_nearest_cwb_Q4_highest_km, log_dist_cwb_q4_km,
+    prox %>% select(feduid, dist_nearest_cwb_Q4_km, log_dist_cwb_q4_km,
                     nearest_reserve_cwb, dist_nearest_reserve_km),
     by = "feduid"
   )
 
 cat("Joined shapefile rows:", nrow(fed_dv), "\n")
 cat("Non-NA perception values:", sum(!is.na(fed_dv$mean_perception)), "\n")
-cat("Non-NA CWB Q4 dist values:", sum(!is.na(fed_dv$dist_nearest_cwb_Q4_highest_km)), "\n")
+cat("Non-NA CWB Q4 dist values:", sum(!is.na(fed_dv$dist_nearest_cwb_Q4_km)), "\n")
 
 
 # =============================================================================
@@ -158,7 +158,7 @@ save_fig(fig_map_a, "fig4_map_dv_by_riding")
 # =============================================================================
 
 fed_dv <- fed_dv %>%
-  mutate(dist_cwb_q4_display = dist_nearest_cwb_Q4_highest_km)
+  mutate(dist_cwb_q4_display = dist_nearest_cwb_Q4_km)
 
 fig_map_b <- ggplot(fed_dv) +
   geom_sf(aes(fill = dist_cwb_q4_display), color = "white", linewidth = 0.07) +

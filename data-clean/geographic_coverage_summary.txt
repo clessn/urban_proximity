@@ -1,0 +1,46 @@
+
+Geographic Coverage of Indian Reserves by Federal Riding
+========================================================
+
+ 50 km buffer: 202 ridings ( 59.8%) have ≥1 reserve
+   0 reserves: 136 ridings ( 40.2%) ████████████████████
+   1 reserves:  89 ridings ( 26.3%) █████████████
+   2 reserves:  29 ridings (  8.6%) ████
+   3 reserves:  24 ridings (  7.1%) ████
+   4 reserves:  15 ridings (  4.4%) ██
+   5 reserves:   5 ridings (  1.5%) █
+   6 reserves:   5 ridings (  1.5%) █
+   7 reserves:   1 ridings (  0.3%) 
+   8 reserves:   1 ridings (  0.3%) 
+   9 reserves:   0 ridings (  0.0%) 
+  10 reserves:   1 ridings (  0.3%) 
+  >10 reserves:  32 ridings (  9.5%)
+
+100 km buffer: 312 ridings ( 92.3%) have ≥1 reserve
+   0 reserves:  26 ridings (  7.7%) ████
+   1 reserves:  22 ridings (  6.5%) ███
+   2 reserves:  29 ridings (  8.6%) ████
+   3 reserves:  33 ridings (  9.8%) █████
+   4 reserves:  56 ridings ( 16.6%) ████████
+   5 reserves:  35 ridings ( 10.4%) █████
+   6 reserves:  39 ridings ( 11.5%) ██████
+   7 reserves:  14 ridings (  4.1%) ██
+   8 reserves:   7 ridings (  2.1%) █
+   9 reserves:   7 ridings (  2.1%) █
+  10 reserves:   4 ridings (  1.2%) █
+  >10 reserves:  66 ridings ( 19.5%)
+
+200 km buffer: 331 ridings ( 97.9%) have ≥1 reserve
+   0 reserves:   7 ridings (  2.1%) █
+   1 reserves:   4 ridings (  1.2%) █
+   2 reserves:   3 ridings (  0.9%) 
+   3 reserves:   8 ridings (  2.4%) █
+   4 reserves:   4 ridings (  1.2%) █
+   5 reserves:   4 ridings (  1.2%) █
+   6 reserves:  23 ridings (  6.8%) ███
+   7 reserves:  39 ridings ( 11.5%) ██████
+   8 reserves:  11 ridings (  3.3%) ██
+   9 reserves:   8 ridings (  2.4%) █
+  10 reserves:   1 ridings (  0.3%) 
+  >10 reserves: 226 ridings ( 66.9%)
+

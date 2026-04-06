@@ -83,22 +83,9 @@ fed <- st_read("data/shapefiles/fed_boundary/lfed000b21a_e.shp", quiet = TRUE) %
 cma <- st_read("data/shapefiles/cma_boundary/lcma000b21a_e.shp", quiet = TRUE) %>%
   st_transform(3347)
 
-# CSD shapefile — extract reserve polygons
-csd <- st_read("data/shapefiles/csd_boundary/lcsd000b21a_e.shp", quiet = TRUE) %>%
-  filter(CSDTYPE %in% c("IRI", "IGD", "S-E", "S-É")) %>%
-  mutate(CSDUID = as.character(CSDUID)) %>%
+# Expanded reserve dataset (1,021 communities incl. Cree/Naskapi, CWB 2011 imputed)
+reserves <- readRDS("data-clean/reserves_expanded.rds") %>%
   st_transform(3347)
-
-# CWB data
-cwb <- read.csv("data/cwb/CWB_2016.csv", fileEncoding = "latin1")
-names(cwb) <- c("CSDUID", "CSDName", "Pop", "Income", "Education",
-                "Housing", "Labour", "CWB", "CommunityType")
-cwb <- cwb %>% mutate(CSDUID = as.character(CSDUID))
-
-# Join CWB to reserve polygons
-reserves <- csd %>%
-  left_join(cwb %>% select(CSDUID, CWB, Pop), by = "CSDUID") %>%
-  mutate(Pop = as.numeric(Pop))
 
 # Reserve centroids for point map
 res_centroids <- st_centroid(reserves) %>%
@@ -111,7 +98,7 @@ cat("Reserves with CWB:", nrow(res_centroids), "\n")
 # 2. BUILD RIDING-LEVEL DV
 # =============================================================================
 
-prox <- read.csv("data-clean/proximity_fed_enhanced.csv") %>%
+prox <- read.csv("data-clean/proximity_fed_v2.csv") %>%
   rename(feduid = FEDUID) %>%
   mutate(feduid = as.numeric(feduid))
 
@@ -141,7 +128,7 @@ riding_dv <- ces %>%
 
 fed_dv <- fed %>%
   left_join(riding_dv, by = "feduid") %>%
-  left_join(prox %>% select(feduid, dist_nearest_cwb_Q4_highest_km), by = "feduid")
+  left_join(prox %>% select(feduid, dist_nearest_cwb_Q4_km), by = "feduid")
 
 # Shared fill scale limits (for consistent colour across main + insets)
 perc_range <- range(fed_dv$mean_perception, na.rm = TRUE)

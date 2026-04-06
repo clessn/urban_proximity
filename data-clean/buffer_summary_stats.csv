@@ -1,0 +1,4 @@
+buffer_km,ridings_with_reserves,pct_with_reserves,total_reserves_count,total_area_sqkm,mean_reserves_per_riding,median_reserves_per_riding
+50,202,59.8,1057,17240.9315,3.13,1
+100,312,92.3,3813,70733.1617,11.28,5
+200,331,97.9,11532,232293.90899999999,34.12,19
