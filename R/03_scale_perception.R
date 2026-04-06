@@ -1,3 +1,4 @@
+.libPaths(c('/home/ral/R/library', .libPaths()))
 # =============================================================================
 # 03_scale_perception.R
 # Step 3a: Build and validate "Perception of Indigenous Peoples" scale
@@ -156,7 +157,9 @@ cat(sprintf("  %-20s N valid (all 5): %d\n", "complete cases", sum(complete.case
 # Passing all 5 items; FA will reveal whether this is 1 or 2 factors.
 
 cat("\n=== FACTOR ANALYSIS (sondr::topdown_fa) ===\n")
-fa_result <- sondr::topdown_fa(scale_items)
+scale_items_complete <- scale_items[complete.cases(scale_items), ]
+cat(sprintf("  Complete cases for FA: %d\n", nrow(scale_items_complete)))
+fa_result <- sondr::topdown_fa(scale_items_complete)
 print(fa_result)
 
 

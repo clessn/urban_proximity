@@ -73,7 +73,7 @@ save_fig <- function(p, name, w = 8, h = 5.5) {
 # 1. BUILD ANALYSIS DATASET
 # =============================================================================
 
-prox <- read.csv("data-clean/proximity_fed_enhanced.csv") %>%
+prox <- read.csv("data-clean/proximity_fed_v2.csv") %>%
   rename(feduid = FEDUID) %>%
   mutate(feduid = as.numeric(feduid))
 
@@ -104,8 +104,8 @@ ces <- readRDS("data/ces2021.rds") %>%
     prox %>% select(feduid, dist_nearest_reserve_km, log_dist_nearest_km,
                     log_reserves_100km, reserves_within_100km,
                     log_dist_cwb_q4_km, log_dist_cwb_q1_km,
-                    nearest_reserve_cwb, nearest_reserve_urban,
-                    dist_nearest_cwb_Q4_highest_km),
+                    nearest_reserve_cwb,
+                    dist_nearest_cwb_Q4_km),
     by = "feduid"
   )
 
@@ -345,7 +345,7 @@ save_fig(fig4, "fig4_map_dv_by_riding", w = 10, h = 6.5)
 # =============================================================================
 
 prox_map <- prox %>%
-  select(feduid, dist_nearest_cwb_Q4_highest_km, nearest_reserve_cwb) %>%
+  select(feduid, dist_nearest_cwb_Q4_km, nearest_reserve_cwb) %>%
   mutate(feduid = as.numeric(feduid))
 
 fed_prox <- st_read("data/shapefiles/fed_boundary/lfed000b21a_e.shp", quiet = TRUE) %>%
@@ -356,7 +356,7 @@ fed_prox <- st_read("data/shapefiles/fed_boundary/lfed000b21a_e.shp", quiet = TR
 fed_prox_main <- st_crop(fed_prox, bbox_main)
 
 fig5 <- ggplot(fed_prox_main) +
-  geom_sf(aes(fill = dist_nearest_cwb_Q4_highest_km), color = "white", linewidth = 0.05) +
+  geom_sf(aes(fill = dist_nearest_cwb_Q4_km), color = "white", linewidth = 0.05) +
   scale_fill_gradientn(
     colors   = c("black", "grey40", "grey75", "white"),
     na.value = "grey90",
@@ -399,7 +399,7 @@ riding_scatter <- ces %>%
     .groups          = "drop"
   ) %>%
   filter(n_resp >= 10) %>%
-  left_join(prox %>% select(feduid, dist_nearest_cwb_Q4_highest_km, log_dist_cwb_q4_km) %>%
+  left_join(prox %>% select(feduid, dist_nearest_cwb_Q4_km, log_dist_cwb_q4_km) %>%
               mutate(feduid = as.numeric(feduid)), by = "feduid") %>%
   mutate(urban_cat = ifelse(prop_urban >= 0.5, "Majority urban ridings", "Majority non-urban ridings"))
 
