@@ -99,10 +99,15 @@ cwb <- read_csv("data/cwb/CWB_2021.csv", show_col_types=FALSE) |>
 reserves_cwb <- reserves |>
   left_join(cwb |> select(CSDUID, cwb_score, pop_2021, comm_type), by="CSDUID")
 
+# Use a population threshold so proximity captures exposure to inhabited reserve
+# communities rather than reserve parcels with little or no resident population.
+reserves_inhabited <- reserves_cwb |>
+  filter(!is.na(pop_2021), pop_2021 >= 100)
+
 # CWB quartiles
-cwb_breaks <- quantile(reserves_cwb$cwb_score, probs=c(0,.25,.5,.75,1), na.rm=TRUE)
+cwb_breaks <- quantile(reserves_inhabited$cwb_score, probs=c(0,.25,.5,.75,1), na.rm=TRUE)
 cat("\nCWB quartile breaks:", cwb_breaks, "\n")
-reserves_cwb <- reserves_cwb |>
+reserves_inhabited <- reserves_inhabited |>
   mutate(
     cwb_quartile = cut(cwb_score, breaks=cwb_breaks,
                        labels=c("Q1_lowest","Q2","Q3","Q4_highest"),
@@ -110,11 +115,28 @@ reserves_cwb <- reserves_cwb |>
   )
 
 # Reserve centroids
-reserves_centroids <- reserves_cwb |>
+reserves_centroids <- reserves_inhabited |>
   mutate(centroid = st_centroid(geometry)) |>
   st_drop_geometry() |>
   mutate(geometry = centroid) |>
   st_as_sf(crs = 3347)
+
+# CMA/CA urban classification for inhabited reserve centroids
+cma <- st_read("data/shapefiles/cma_boundary/lcma000b21a_e.shp", quiet = TRUE) |>
+  st_transform(3347)
+
+reserves_centroids <- st_join(
+  reserves_centroids,
+  cma |> select(CMANAME, CMATYPE),
+  left = TRUE
+) |>
+  mutate(
+    urban_class = case_when(
+      CMATYPE == "B" ~ "urban_cma",
+      CMATYPE %in% c("D", "H") ~ "semi_urban_ca",
+      TRUE ~ "rural_remote"
+    )
+  )
 
 # =============================================================================
 # 4. Recompute distance matrix
@@ -134,10 +156,13 @@ fed_prox <- fed_centroids_corrected |>
     nearest_reserve_name     = reserves_centroids$CSDNAME[nearest_reserve_idx],
     nearest_reserve_cwb      = reserves_centroids$cwb_score[nearest_reserve_idx],
     nearest_reserve_urban    = reserves_centroids$comm_type[nearest_reserve_idx],
+    nearest_reserve_urban_class = reserves_centroids$urban_class[nearest_reserve_idx],
     nearest_reserve_pop      = reserves_centroids$pop_2021[nearest_reserve_idx],
     log_dist_nearest_km      = log1p(dist_nearest_reserve_km),
     log_area_nonres_km2      = log1p(area_nonres_km2)
   )
+
+fed_prox$urban_class <- fed_prox$nearest_reserve_urban_class
 
 # By CWB quartile
 for (q in c("Q1_lowest","Q2","Q3","Q4_highest")) {
