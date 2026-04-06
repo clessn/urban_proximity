@@ -1,0 +1,94 @@
+\documentclass[12pt,letterpaper]{article}
+
+\usepackage[letterpaper,margin=1in]{geometry}
+\usepackage[american]{babel}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{iftex}
+\ifPDFTeX
+  \usepackage{newtxtext,newtxmath}
+\else
+  \usepackage{fontspec}
+  \setmainfont{TeX Gyre Termes}
+\fi
+\usepackage{microtype}
+\usepackage{setspace}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{tabularx}
+\usepackage{array}
+\usepackage{float}
+\usepackage{fancyhdr}
+\usepackage[hidelinks]{hyperref}
+\usepackage[round]{natbib}
+\newcommand{\parencite}[1]{\citep{#1}}
+\newcommand{\textcite}[1]{\citet{#1}}
+
+\setlength{\parindent}{1em}
+\setlength{\parskip}{1.3em}
+\setstretch{1.1}
+
+\setcounter{secnumdepth}{0}
+
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[R]{\textit{Where Did the Center Go?}}
+\fancyfoot[C]{\thepage}
+\renewcommand{\headrulewidth}{0.5pt}
+\setlength{\headheight}{15pt}
+
+\title{Urban proximity}
+\author{Camille Pelletier \and Laurence-Olivier M. Foisy}
+\date{}
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+\noindent
+Urban Canadians tend to hold more positive attitudes toward Indigenous peoples than their rural counterparts. However, this general openness may mask a systematic perceptual distortion. Using the 2021 Canadian Election Study and spatial data on Indigenous reserves, we show that urban respondents living near prosperous reserves, as measured by the Community Well-Being index, are more likely to underestimate discrimination against Indigenous peoples and deny structural explanations for Indigenous inequality. We argue this occurs because reserves near urban centers are systematically wealthier than average, creating an unrepresentative reference point. Urban Canadians generalize from this visible but atypical outgroup, leading them to perceive Indigenous peoples as more privileged than they actually are. This finding extends contact theory by highlighting that the representativeness of the outgroup encountered matters: proximity to an unrepresentative outgroup can reinforce denial of structural inequality even among otherwise sympathetic observers.
+\end{abstract}
+
+
+\section{Introduction}
+% Introduce the paradox: urban Canadians are generally more positive toward Indigenous peoples, yet proximity to wealthy reserves distorts their perception of discrimination and structural inequality. State your two-part argument and its contribution to contact theory literature.
+
+\section{Theoritical framework}
+% Start with contact theory (Pettigrew & Tropp 2006; Allport) and its prediction that proximity reduces prejudice
+% Introduce group position theory (Blumer 1958; Bobo 1999) to explain why contact doesn't necessarily challenge perceptions of structural inequality
+% Introduce the reference point / relative status mechanism: people generalize from the outgroup members they are exposed to, which may be systematically unrepresentative
+% Connect to subtyping literature (Weber & Crocker 1983; Wilder 1984; Brown & Hewstone 2005): visible prosperous reserves function as a kind of collective subtype that paradoxically reinforces the sense that Indigenous peoples don't face structural disadvantage
+% Bring in Hewstone & Brown (1986) on how economically successful minorities become "proof" that inequality isn't structural
+
+\section{The Canadian context}
+% Brief overview of Indigenous-settler relations and systemic inequality in Canada
+% Key point: reserves near urban centers score significantly higher on the Community Well-Being index (your 3.3× finding) — they are structurally unrepresentative of the average Indigenous community
+% This creates the conditions for a systematic perceptual distortion among urban dwellers
+
+\section{Data and Methods}
+% CES 2021 dataset
+% Perception scale construction and validation (factor analysis, α=0.847)
+% Proximity measures (distance to nearest reserve, density, CWB-weighted measures)
+% Urban/rural distinction
+% Modeling strategy (OLS with controls, province fixed effects, clustered SEs by riding)
+
+\section{Results}
+% Finding 1: Urban Canadians hold more positive overall attitudes toward Indigenous peoples (thermometer, resentment scale, discrimination perception)
+
+% Finding 2: Within urban respondents, proximity to high-CWB reserves significantly increases negative perception of discrimination and structural causes — the effect is strongest on discrimination perception and resentment, not just affect
+
+% Finding 3: The three-way interaction (urban × proximity × CWB) confirms the mechanism — it is specifically the combination of urban location, closeness, and reserve wealth that drives the distortion 
+
+\section{Discussion}
+% Interpret the paradox: urban openness is real but fragile — it coexists with a distorted reference point
+% Connect back to Denis (2015): like subtyping in interpersonal contact, exposure to prosperous reserves functions as a structural form of subtyping at the aggregate level
+% Distinguish your mechanism from classic contact theory — this is not about reduced anxiety or empathy, it is about cognitive distortion of the representativeness of the outgroup
+% Discuss implications: policies aimed at improving Indigenous well-being near urban centers may inadvertently fuel resentment if the broader context of inequality remains invisible to urban residents
+
+\section{Conclusion}
+% Summarize the two-part finding
+% Argue for extending contact theory to account for the representativeness of the outgroup encountered, not just the quality or quantity of contact
+% Call for research on how to make structural inequality visible to urban Canadians whose local reference point is unrepresentative
+
+\end{document}
